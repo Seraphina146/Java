@@ -1,0 +1,40 @@
+import java.io.*;
+import java.net.*;
+
+public class Client {
+    public static void main(String[] args) {
+        try {
+            Socket socket = new Socket("localhost", 12345);
+            BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+            output.println("Hello Server!");
+            String response = input.readLine();
+            System.out.println("Server response: " + response);
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+import java.io.*;
+import java.net.*;
+
+public class Server {
+    public static void main(String[] args) {
+        try {
+            ServerSocket serverSocket = new ServerSocket(12345);
+            System.out.println("Server started. Waiting for client...");
+            Socket clientSocket = serverSocket.accept();
+            System.out.println("Client connected.");
+            BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+            String message = input.readLine();
+            System.out.println("Client message: " + message);
+            output.println("Hello Client! This is the server.");
+            clientSocket.close();
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
